@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Révisions VCA - Webelec Stock</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/products.html">⚡ Webelec Stock</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/products.html">Articles</a></li>
+        <li class="nav-item"><a class="nav-link" href="/customers.html">Clients</a></li>
+        <li class="nav-item"><a class="nav-link" href="/chantiers.html">Chantiers</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/vca.html">VCA</a></li>
+        <li class="nav-item"><a class="nav-link" href="/vca-test.html">Test VCA</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0">Révisions VCA</h1>
+      <small class="text-muted">Veiligheids Checklist Aannemers — Certification sécurité entrepreneurs</small>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">+ Nouvelle révision</button>
+      <button class="btn btn-outline-secondary" onclick="loadVca()">&#x21bb; Rafraichir</button>
+    </div>
+  </div>
+
+  <div id="alert" class="d-none"></div>
+
+  <div class="table-responsive shadow-sm rounded bg-white">
+    <table class="table table-hover table-striped mb-0 align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Candidat</th>
+          <th>Entreprise</th>
+          <th>Niveau</th>
+          <th>Date examen</th>
+          <th>Score</th>
+          <th>Résultat</th>
+          <th>N° Certificat</th>
+          <th>Expiration</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="vca-table-body">
+        <tr><td colspan="9" class="text-center text-muted py-4">Chargement...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Création -->
+<div class="modal fade" id="createModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nouvelle révision VCA</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="create-form" novalidate>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Candidat <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="input-candidateName" maxlength="150" required/>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Entreprise <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="input-company" maxlength="150" required/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Niveau VCA <span class="text-danger">*</span></label>
+              <select class="form-select" id="input-niveau" required>
+                <option value="VCA_BASIS">VCA Basis</option>
+                <option value="VCA_VOL">VCA VOL</option>
+                <option value="VCA_PETROCHIMIE">VCA Pétrochimie</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Date d'examen <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" id="input-examDate" required/>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Score (%)</label>
+              <input type="number" class="form-control" id="input-score" min="0" max="100"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Centre d'examen</label>
+              <input type="text" class="form-control" id="input-examCenter" maxlength="150"/>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Résultat <span class="text-danger">*</span></label>
+              <select class="form-select" id="input-status" required>
+                <option value="EN_COURS">En cours</option>
+                <option value="REUSSI">Réussi</option>
+                <option value="ECHOUE">Échoué</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">N° Certificat</label>
+              <input type="text" class="form-control" id="input-certificateNumber" maxlength="50"/>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date d'expiration</label>
+              <input type="date" class="form-control" id="input-expiryDate"/>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-success">Créer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmer la suppression</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Supprimer la révision VCA de <strong id="delete-vca-name"></strong> ?
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-danger" id="confirm-delete-btn">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const API_URL = '/api/vca';
+  let deleteModal, createModal;
+  let pendingDeleteId = null;
+
+  const STATUS_LABELS = {
+    EN_COURS: { label: 'En cours', badge: 'secondary' },
+    REUSSI:   { label: 'Réussi',   badge: 'success'   },
+    ECHOUE:   { label: 'Échoué',   badge: 'danger'    }
+  };
+
+  const NIVEAU_LABELS = {
+    VCA_BASIS:       'VCA Basis',
+    VCA_VOL:         'VCA VOL',
+    VCA_PETROCHIMIE: 'VCA Pétrochimie'
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    createModal = new bootstrap.Modal(document.getElementById('createModal'));
+    document.getElementById('confirm-delete-btn').addEventListener('click', confirmDelete);
+    document.getElementById('create-form').addEventListener('submit', handleCreate);
+    loadVca();
+  });
+
+  async function loadVca() {
+    const tbody = document.getElementById('vca-table-body');
+    tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Chargement...</td></tr>';
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      renderTable(await res.json());
+    } catch (e) {
+      showAlert('danger', 'Erreur lors du chargement : ' + e.message);
+      tbody.innerHTML = '<tr><td colspan="9" class="text-center text-danger py-4">Impossible de charger les données.</td></tr>';
+    }
+  }
+
+  function fmtDate(d) {
+    return d ? new Date(d).toLocaleDateString('fr-FR') : '<span class="text-muted">—</span>';
+  }
+
+  function scoreBar(score) {
+    if (score == null) return '<span class="text-muted">—</span>';
+    const color = score >= 70 ? 'success' : score >= 50 ? 'warning' : 'danger';
+    return `
+      <div class="d-flex align-items-center gap-1">
+        <div class="progress flex-grow-1" style="height:8px;min-width:60px">
+          <div class="progress-bar bg-${color}" style="width:${score}%"></div>
+        </div>
+        <small>${score}%</small>
+      </div>`;
+  }
+
+  function renderTable(items) {
+    const tbody = document.getElementById('vca-table-body');
+    if (items.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Aucune révision.</td></tr>';
+      return;
+    }
+    const today = new Date();
+    tbody.innerHTML = items.map(v => {
+      const s = STATUS_LABELS[v.status] ?? { label: v.status, badge: 'secondary' };
+      const expired = v.expiryDate && new Date(v.expiryDate) < today;
+      const expCell = v.expiryDate
+        ? `<span class="${expired ? 'text-danger fw-semibold' : ''}">${fmtDate(v.expiryDate)}${expired ? ' ⚠' : ''}</span>`
+        : '<span class="text-muted">—</span>';
+      return `
+        <tr>
+          <td>${v.candidateName}</td>
+          <td class="small text-muted">${v.company}</td>
+          <td><span class="badge bg-info text-dark">${NIVEAU_LABELS[v.niveau] ?? v.niveau}</span></td>
+          <td>${fmtDate(v.examDate)}</td>
+          <td>${scoreBar(v.score)}</td>
+          <td><span class="badge bg-${s.badge}">${s.label}</span></td>
+          <td class="small">${v.certificateNumber ?? '<span class="text-muted">—</span>'}</td>
+          <td>${expCell}</td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-outline-danger" onclick="askDelete(${v.id}, '${escHtml(v.candidateName)}')">Supprimer</button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  async function handleCreate(e) {
+    e.preventDefault();
+    const form = e.target;
+    if (!form.checkValidity()) { form.classList.add('was-validated'); return; }
+
+    const scoreVal = document.getElementById('input-score').value;
+    const body = {
+      candidateName:     document.getElementById('input-candidateName').value.trim(),
+      company:           document.getElementById('input-company').value.trim(),
+      niveau:            document.getElementById('input-niveau').value,
+      examDate:          document.getElementById('input-examDate').value,
+      examCenter:        document.getElementById('input-examCenter').value.trim() || null,
+      score:             scoreVal !== '' ? parseInt(scoreVal) : null,
+      status:            document.getElementById('input-status').value,
+      certificateNumber: document.getElementById('input-certificateNumber').value.trim() || null,
+      expiryDate:        document.getElementById('input-expiryDate').value || null
+    };
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (res.status !== 201) throw new Error(`HTTP ${res.status}`);
+      createModal.hide();
+      form.reset();
+      form.classList.remove('was-validated');
+      showAlert('success', 'Révision VCA créée avec succès.');
+      loadVca();
+    } catch (e) {
+      showAlert('danger', 'Erreur lors de la création : ' + e.message);
+    }
+  }
+
+  function askDelete(id, name) {
+    pendingDeleteId = id;
+    document.getElementById('delete-vca-name').textContent = name;
+    deleteModal.show();
+  }
+
+  async function confirmDelete() {
+    if (!pendingDeleteId) return;
+    deleteModal.hide();
+    try {
+      const res = await fetch(`${API_URL}/${pendingDeleteId}`, { method: 'DELETE' });
+      if (res.status !== 204) throw new Error(`HTTP ${res.status}`);
+      showAlert('success', 'Révision supprimée.');
+      loadVca();
+    } catch (e) {
+      showAlert('danger', 'Erreur lors de la suppression : ' + e.message);
+    } finally {
+      pendingDeleteId = null;
+    }
+  }
+
+  function showAlert(type, message) {
+    const el = document.getElementById('alert');
+    el.className = `alert alert-${type} alert-dismissible fade show`;
+    el.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    setTimeout(() => el.classList.add('d-none'), 4000);
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  }
+</script>
+</body>
+</html>
